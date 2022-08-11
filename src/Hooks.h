@@ -17,12 +17,12 @@ namespace MaxsuIFrame
 	private:
 		static bool IsGhost(const RE::Actor* a_actor)
 		{
-			logger::info("IsGhost Trigger!");
+			logger::debug("IsGhost Trigger!");
 
 			bool iframeActive = false, iframeSate = false;
 
 			if (a_actor->GetGraphVariableBool("bIframeActive", iframeActive) && iframeActive && a_actor->GetGraphVariableBool("bInIframe", iframeSate) && iframeSate) {
-				logger::info("Actor is invulnerable!");
+				logger::debug("Actor is invulnerable!");
 				return true;
 			}
 
