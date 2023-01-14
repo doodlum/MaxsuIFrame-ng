@@ -12,7 +12,7 @@ namespace MaxsuIFrame
 			auto& trampoline = SKSE::GetTrampoline();
 			_IsGhost = trampoline.write_call<5>(REL::RelocationID(37673, 38627).address() + REL::Relocate(0x45, 0x47), IsGhost);
 			_IsGhost = trampoline.write_call<5>(REL::RelocationID(36715, 37725).address() + REL::Relocate(0x2A, 0x22), IsGhost);
-			_IsGhost = trampoline.write_call<5>(REL::RelocationID(39428, 40504).address() + REL::Relocate(0x14, 0x14), IsGhost);
+			_IsGhost = trampoline.write_call<5>(REL::RelocationID(39428, 40504).address() + REL::Relocate(0x14, 0x14), IsGhost); // 1.6.629+ changed but is the same hook
 		}
 
 	private:

@@ -13,7 +13,7 @@ include(GNUInstallDirs)
 # info
 project(
 	MaxsuIFrame
-	VERSION 1.0.3
+	VERSION 1.0.6
 	LANGUAGES CXX
 )
 
