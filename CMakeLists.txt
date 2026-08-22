@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.21)
 
+
+set(CommonLibPath "${CMAKE_SOURCE_DIR}/extern/CommonLibSSE-NG" CACHE PATH "Path to CommonLibSSE-NG")
+set(COMMONLIB_PREBUILT ON CACHE BOOL "Use prebuilt CommonLibSSE-NG" FORCE)
+set(COMMONLIB_PREBUILT_MULTICONFIG ON CACHE BOOL "Use prebuilt CommonLibSSE-NG with multi-config generators" FORCE)
+set(ENABLE_SKYRIM_SE ON CACHE BOOL "Enable Skyrim SE support" FORCE)
+set(ENABLE_SKYRIM_AE ON CACHE BOOL "Enable Skyrim AE support" FORCE)
+set(ENABLE_SKYRIM_VR ON CACHE BOOL "Enable Skyrim VR support" FORCE)
 # standards & flags
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -51,7 +58,7 @@ source_group(
 )
 
 # dependencies
-add_subdirectory($ENV{CommonLibSSEPath} CommonLibSSE)
+add_subdirectory(${CommonLibPath} CommonLibSSE EXCLUDE_FROM_ALL)
 add_subdirectory($ENV{DKUtilPath} DKUtil)
 find_package(spdlog CONFIG REQUIRED)
 
@@ -93,7 +100,6 @@ if (MSVC)
 		${PROJECT_NAME}
 		PRIVATE
 			/MP
-			/await
 			/W0
 			/WX
 			/permissive-
@@ -128,15 +134,17 @@ target_precompile_headers(
 )
 
 # post build event
-add_custom_command(
-	TARGET 
-		${PROJECT_NAME}
-	POST_BUILD
-		COMMAND 
-			powershell -NoProfile -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION}"
-		COMMENT 
-			"Updating project :))"
-)
+if(NOT MOD_AUTOMATED_BUILD)
+	add_custom_command(
+		TARGET
+			${PROJECT_NAME}
+		POST_BUILD
+			COMMAND
+				powershell -NoProfile -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "$<TARGET_FILE_DIR:${PROJECT_NAME}>" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION}"
+			COMMENT
+				"Updating project :))"
+	)
+endif()
 
 # called via !Rebuild.ps1
 if(DEFINED GROUP)
